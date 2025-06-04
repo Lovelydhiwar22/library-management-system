@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Logout</title>
+  <script>
+    // Clear any stored auth tokens or session data here
+    localStorage.clear();
+    sessionStorage.clear();
+
+    // Optionally, you can call backend logout API to invalidate session
+
+    // Redirect to login page after logout
+    window.location.href = 'login.html';
+  </script>
+</head>
+<body>
+  <p>Logging out...</p>
+</body>
+</html>

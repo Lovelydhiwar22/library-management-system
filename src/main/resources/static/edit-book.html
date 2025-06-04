@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Edit Book</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100 p-6">
+
+  <div class="max-w-md mx-auto bg-white p-6 rounded shadow">
+    <h1 class="text-2xl font-bold mb-4">Edit Book</h1>
+
+    <form id="editBookForm" class="space-y-4">
+      <input type="hidden" id="bookId" />
+
+      <div>
+        <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
+        <input type="text" id="title" name="title" required class="mt-1 block w-full border border-gray-300 rounded p-2" />
+      </div>
+
+      <div>
+        <label for="author" class="block text-sm font-medium text-gray-700">Author</label>
+        <input type="text" id="author" name="author" required class="mt-1 block w-full border border-gray-300 rounded p-2" />
+      </div>
+
+      <div>
+        <label for="isbn" class="block text-sm font-medium text-gray-700">ISBN</label>
+        <input type="text" id="isbn" name="isbn" required class="mt-1 block w-full border border-gray-300 rounded p-2" />
+      </div>
+
+      <div>
+        <label for="copies" class="block text-sm font-medium text-gray-700">Number of Copies</label>
+        <input type="number" id="copies" name="copies" min="1" required class="mt-1 block w-full border border-gray-300 rounded p-2" />
+      </div>
+
+      <button type="submit" class="w-full bg-green-600 text-white font-semibold py-2 rounded hover:bg-green-700 transition">
+        Save Changes
+      </button>
+    </form>
+  </div>
+
+  <script>
+    async function loadBook() {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+      if (!id) {
+        alert('No book ID provided');
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/books/${id}`);
+        if (!response.ok) throw new Error('Failed to fetch book details');
+        const book = await response.json();
+
+        document.getElementById('bookId').value = book.id || id;
+        document.getElementById('title').value = book.title || '';
+        document.getElementById('author').value = book.author || '';
+        document.getElementById('isbn').value = book.isbn || '';
+        document.getElementById('copies').value = book.copies || 1;
+      } catch (error) {
+        alert('Error loading book data');
+        console.error(error);
+      }
+    }
+
+    document.getElementById('editBookForm').addEventListener('submit', async function(event) {
+      event.preventDefault();
+
+      const id = document.getElementById('bookId').value;
+      const updatedBook = {
+        title: this.title.value,
+        author: this.author.value,
+        isbn: this.isbn.value,
+        copies: parseInt(this.copies.value, 10),
+      };
+
+      try {
+        const response = await fetch(`/api/books/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updatedBook),
+        });
+
+        if (response.ok) {
+          alert('Book updated successfully!');
+          window.location.href = 'view-books.html'; // Redirect after success
+        } else {
+          alert('Failed to update book.');
+        }
+      } catch (error) {
+        alert('Error updating book.');
+        console.error(error);
+      }
+    });
+
+    window.onload = loadBook;
+  </script>
+
+</body>
+</html>

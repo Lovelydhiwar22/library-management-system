@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+    
+  <div class="w-full max-w-sm bg-white p-8 rounded shadow">
+    <h2 class="text-2xl font-bold mb-6 text-center">Login</h2>
+    <form id="loginForm" class="space-y-4">
+
+      <div>
+        <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+        <input
+          id="username"
+          name="username"
+          type="text"
+          required
+          class="mt-1 block w-full border border-gray-300 rounded p-2"
+        />
+      </div>
+
+      <div>
+        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          required
+          class="mt-1 block w-full border border-gray-300 rounded p-2"
+        />
+      </div>
+
+      <button
+        type="submit"
+        class="w-full bg-blue-600 text-white font-semibold py-2 rounded hover:bg-blue-700 transition"
+      >
+        Login
+      </button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const loginData = {
+        username: e.target.username.value,
+        password: e.target.password.value,
+      };
+
+      try {
+        const response = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(loginData),
+        });
+
+        if (response.ok) {
+          alert('Login successful!');
+          // Redirect to dashboard or home page
+          window.location.href = 'dashboard.html';
+        } else {
+          alert('Invalid username or password.');
+        }
+      } catch (error) {
+        alert('Error during login.');
+        console.error(error);
+      }
+    });
+  </script>
+
+</body>
+</html>
